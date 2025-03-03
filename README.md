@@ -30,8 +30,8 @@ Registres autorisés à modifier : famille de EAX, EBX, ECX, EDX, EDI, ESI.
    - [x] Afficher la liste mise à jour.
 
 🔹 **4. Afficher la personne la plus âgée et la plus jeune**
-   - [ ] Parcourir la liste et identifier la personne la plus âgée et la plus jeune.
-   - [ ] Afficher leurs informations.
+   - [x] Parcourir la liste et identifier la personne la plus âgée et la plus jeune.
+   - [x] Afficher leurs informations.
 
 🔹 **5. Calculer et afficher l’âge moyen**
    - [ ] Parcourir la liste et calculer la moyenne des âges.
