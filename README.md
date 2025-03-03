@@ -23,11 +23,11 @@ Registres autorisés à modifier : famille de EAX, EBX, ECX, EDX, EDI, ESI.
    - [x] Parcourir et afficher la liste avec leurs numéros, noms et âges.
 
 🔹 **3. Supprimer une personne spécifique**
-   - [ ] Demander le numéro d’enregistrement à supprimer.
-   - [ ] Vérifier si la personne existe.
-      - [ ] Si oui : supprimer la personne et réorganiser la liste.
-      - [ ] Si non : afficher un message d’erreur.
-   - [ ] Afficher la liste mise à jour.
+   - [x] Demander le numéro d’enregistrement à supprimer.
+   - [x] Vérifier si la personne existe.
+      - [x] Si oui : supprimer la personne et réorganiser la liste.
+      - [x] Si non : afficher un message d’erreur.
+   - [x] Afficher la liste mise à jour.
 
 🔹 **4. Afficher la personne la plus âgée et la plus jeune**
    - [ ] Parcourir la liste et identifier la personne la plus âgée et la plus jeune.
