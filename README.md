@@ -1,18 +1,18 @@
 🏗 **Développement du Programme en Assembleur**
 
 🔹 **Menu Principal & Navigation**
-   - [*] Afficher un menu avec les 6 choix possibles.
-   - [*] Lire et traiter l'entrée utilisateur pour choisir une option.
-   - [*] Boucle pour revenir au menu après chaque action.
+   - [x] Afficher un menu avec les 6 choix possibles.
+   - [x] Lire et traiter l'entrée utilisateur pour choisir une option.
+   - [x] Boucle pour revenir au menu après chaque action.
 
 🔹 **1. Enregistrer du personnel**
-   - [*] Demander à l’utilisateur de saisir un nom et un âge.
-   - [*] Stocker ces informations en mémoire.
-   - [*] Générer un numéro d’enregistrement unique.
+   - [x] Demander à l’utilisateur de saisir un nom et un âge.
+   - [x] Stocker ces informations en mémoire.
+   - [x] Générer un numéro d’enregistrement unique.
 
 🔹 **2. Lister les personnes enregistrées**
-   - [*] Vérifier si des personnes sont enregistrées.
-   - [*] Parcourir et afficher la liste avec leurs numéros, noms et âges.
+   - [x] Vérifier si des personnes sont enregistrées.
+   - [x] Parcourir et afficher la liste avec leurs numéros, noms et âges.
 
 🔹 **3. Supprimer une personne spécifique**
    - [ ] Demander le numéro d’enregistrement à supprimer.
