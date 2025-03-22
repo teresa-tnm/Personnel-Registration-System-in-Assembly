@@ -1,4 +1,4 @@
-
+This project involves the development of a personnel registration system using x86 Assembly language, designed to handle multiple operations like adding, deleting, listing personnel, displaying the oldest and youngest person, and calculating the average age. It provides a menu-driven interface, where users can interact with the system through simple input prompts.
 
 🏗 **Développement du Programme en Assembleur**
 
