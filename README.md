@@ -1,10 +1,4 @@
-À noter :
 
-Aucune section .bss dans le code.
-
-Instructions autorisées : db, dw, dd, equ, dup(), times, mov, int, and, or, not, xor, add, sub, imul, idiv, inc, dec, shr, shl, call, ret, loop, cmp, jmp, famille de jmp conditionnel, push, pop.
-
-Registres autorisés à modifier : famille de EAX, EBX, ECX, EDX, EDI, ESI.
 
 🏗 **Développement du Programme en Assembleur**
 
