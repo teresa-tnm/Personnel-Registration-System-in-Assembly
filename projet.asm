@@ -51,7 +51,7 @@ main_loop:
 enregistrer:
     mov ecx, msg_prompt  ; J’affiche le message "Nom Age: "
     call print_str  ;imprime le
-    mov eax, 3  ; Appel système pour lire
+    mov eax, 3  ; Appel système pour lire quelque chose
     mov ebx, 0  ; lire a partir de clavier
     mov ecx, input_buffer  ; Stocke dans le tampon
     mov edx, 256  ; Taille max de l’entrée
@@ -62,7 +62,7 @@ enregistrer:
 ; Option 2 : Lister toutes les personnes
 display_list:
     mov ecx, msg_list  ; Affiche "Liste des personnes:"
-    call print_str  ; Imprime le 
+    call print_str  ; print it 
     cmp dword [count], 0  ; Vérifie s’il y a des personnes enregistrées
     je no_person_list  ; Si count = 0, on va afficher le message "vide"
     mov esi, personnel  ; Pointe au début du tableau des personnes
@@ -95,7 +95,7 @@ display_done:
 
 ; Option 3 : Supprimer une personne
 supprimer:
-    mov ecx, msg_delete_prompt  ; Demande quel numéro a supprimer
+    mov ecx, msg_delete_prompt  ; Demande quel numéro à supprimer
     call print_str  ; Affiche la demande
     mov eax, 3  ; Lecture de l’entrée
     mov ebx, 0  ; Depuis le clavier
@@ -103,42 +103,45 @@ supprimer:
     mov edx, 256  ; Longueur max
     int 0x80  ; Lis l’entrée
     call str_to_int  ; Convertit en entier dans EAX
-    cmp eax, 0  ; Est-ce < 0 ?
-    jl invalid_index  ; Si oui, erreur
-    cmp eax, [count]  ; Est-ce >= nombre de personnes ?
-    jge invalid_index  ; Si oui, erreur aussi
-    mov ebx, 68  ; Chaque entrée fait 68 octets
-    imul ebx  ; Multiplie l’index par 68 pour l’offset
-    mov edi, personnel  ; Début du tableau
-    add edi, eax  ; Pointe sur la personne à supprimer
-    mov esi, edi  ; Source = personne suivante
-    add esi, 68  ; Avance à l’entrée suivante
-    mov ecx, [count]  ; Nombre total de personnes
-    sub ecx, eax  ; Combien après celle à supprimer
-    dec ecx  ; Moins une car on décale
-    cmp ecx, 0  ; Quelque chose à décaler ?
-    jle shift_done  ; Sinon, fini
+    push eax         ; Sauvegarde l’index
+    cmp eax, 0       ; Est-ce < 0 ?
+    jl invalid_index ; Si oui, erreur
+    cmp eax, [count] ; Est-ce >= nombre de personnes ?
+    jge invalid_index ; Si oui, erreur aussi
+    pop eax          ; Restaure l’index dans EAX
+    mov edx, eax     ; Sauve l’index dans EDX pour le garder
+    mov ebx, 68      ; Chaque entrée fait 68 octets
+    imul eax, ebx    ; Multiplie l’index par 68, résultat dans EAX (offset)
+    mov edi, personnel ; Début du tableau
+    add edi, eax     ; Pointe sur la personne à supprimer
+    mov esi, edi     ; Source = personne suivante
+    add esi, 68      ; Avance à l’entrée suivante
+    mov ecx, [count] ; Nombre total de personnes
+    sub ecx, edx     ; Soustrait l’index (en entrées, pas octets) pour avoir le nombre d’entrées à décaler
+    cmp ecx, 0       ; Quelque chose à décaler ?
+    jle shift_done   ; Sinon, fini
 shift_loop:
-    push ecx  ; Sauve le compteur extérieur
-    mov ecx, 68  ; 68 octets à copier
+    push ecx         ; Sauve le compteur extérieur
+    mov ecx, 68      ; 68 octets à copier
 copy_loop:
-    mov al, [esi]  ; Prend un octet de la source
-    mov [edi], al  ; Met dans la destination
-    inc esi  ; Octet suivant de la source
-    inc edi  ; Octet suivant de la destination
-    dec ecx  ; Un octet de moins
-    jnz copy_loop  ; Continue si pas fini
-    pop ecx  ; Restaure le compteur
-    dec ecx  ; Une entrée de moins à décaler
-    jnz shift_loop  ; Continue si reste à faire
+    mov al, [esi]    ; Prend un octet de la source
+    mov [edi], al    ; Met dans la destination
+    inc esi          ; Octet suivant de la source
+    inc edi          ; Octet suivant de la destination
+    dec ecx          ; Un octet de moins
+    jnz copy_loop    ; Continue si pas fini
+    pop ecx          ; Restaure le compteur
+    dec ecx          ; Une entrée de moins à décaler
+    jnz shift_loop   ; Continue si reste à faire
 shift_done:
-    dec dword [count]  ; Diminue le compteur de personnes
-    call display_list  ; Affiche la liste mise à jour
-    jmp main_loop  ; Retour au menu
+    dec dword [count] ; Diminue le compteur de personnes
+    call display_list ; Affiche la liste mise à jour
+    jmp main_loop     ; Retour au menu
 invalid_index:
-    mov ecx, msg_error_invalid  ; Message d’erreur
-    call print_str  ; Affiche-le
-    jmp main_loop  ; Retour au menu
+    pop eax           ; Restaure la pile si erreur
+    mov ecx, msg_error_invalid ; Message d’erreur
+    call print_str    ; Affiche-le
+    jmp main_loop     ; Retour au menu
 
 ; Option 4 : Afficher la personne la plus âgée et la plus jeune
 plus_age_jeune:
@@ -289,7 +292,7 @@ store_entry:
     mov ecx, 63  ; Max 63 caractères pour le nom
 copy_name:
     mov al, byte [esi]  ; Prend un caractère
-    cmp al, 0  ; Fin du nom ?
+    cmp al, 0  ; Fin du nom 
     je name_done  ; Si oui, termine
     mov byte [edi], al  ; Stocke le caractère
     inc esi  ; Caractère suivant source
@@ -314,9 +317,9 @@ str_to_int:
     xor ebx, ebx  ; Registre temporaire à 0
 convert_loop:
     mov bl, [esi]  ; Prend un chiffre
-    cmp bl, 0  ; Fin de la chaîne ?
+    cmp bl, 0  ; Fin de la chaîne 
     je convert_done  ; Si oui, termine
-    cmp bl, 10  ; Saut de ligne ?
+    cmp bl, 10  ; Saut de ligne 
     je convert_done  ; Si oui, termine
     sub bl, '0'  ; Convertit en nombre
     imul eax, 10  ; Décale à gauche
@@ -353,22 +356,24 @@ print_number:
     push ecx  ; Sauve ECX
     push edx  ; Sauve EDX
     push esi  ; Sauve ESI
-    mov esi, input_buffer + 255  ; Fin du tampon pour construire la chaîne
-    mov byte [esi], 0  ; Termine avec un 0
-    mov ebx, 10  ; Divise par 10 pour les chiffres
+    mov esi, input_buffer + 255  ; Fin du tampon
+    mov byte [esi], 0  ; Null-terminate
+    mov ebx, 10  ; Diviseur 10
+    mov ecx, 0   ; Compteur pour éviter test
 convert_num:
-    dec esi  ; Recule d’un emplacement
-    xor edx, edx  ; Efface EDX pour la division
-    div ebx  ; Divise EAX par 10, reste dans EDX
-    add dl, '0'  ; Convertit le reste en ASCII
-    mov [esi], dl  ; Stocke le chiffre
-    test eax, eax  ; Reste quelque chose à diviser ?
-    jnz convert_num  ; Si oui, continue
+    xor edx, edx  ; Efface EDX pour idiv
+    idiv ebx      ; Divise EAX par 10, quotient dans EAX, reste dans EDX
+    add dl, '0'   ; Convertit le reste en ASCII
+    dec esi       ; Recule dans le tampon
+    mov [esi], dl ; Stocke le chiffre
+    inc ecx       ; Compte les chiffres
+    cmp eax, 0    ; Vérifie si quotient = 0
+    jne convert_num ; Continue si non zéro
     mov ecx, esi  ; Pointe sur le début du nombre
-    call print_str  ; Affiche-le
-    pop esi  ; Restaure ESI
-    pop edx  ; Restaure EDX
-    pop ecx  ; Restaure ECX
-    pop ebx  ; Restaure EBX
-    pop eax  ; Restaure EAX
-    ret  ; Fin de la fonction
+    call print_str ; Affiche-le
+    pop esi       ; Restaure ESI
+    pop edx       ; Restaure EDX
+    pop ecx       ; Restaure ECX
+    pop ebx       ; Restaure EBX
+    pop eax       ; Restaure EAX
+    ret           ; Fin
